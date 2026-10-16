@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><title>Блог</title></head>
+<body>
+<h2>Все статьи</h2>
+{% if user.is_authenticated %}
+    <p><a href="{% url 'article_create' %}">Написать статью</a></p>
+{% endif %}
+
+{% for article in articles %}
+<div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+    <h3><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h3>
+    <p>Автор: {{ article.author.username }} | Дата: {{ article.created_at }}</p>
+    {% if article.image %}
+        <img src="{{ article.image.url }}" width="200"><br>
+    {% endif %}
+</div>
+{% empty %}
+    <p>Статей пока нет.</p>
+{% endfor %}
+
+<div>
+    {% if articles.has_previous %}
+        <a href="?page={{ articles.previous_page_number }}">Назад</a>
+    {% endif %}
+    <span>Страница {{ articles.number }} из {{ articles.paginator.num_pages }}</span>
+    {% if articles.has_next %}
+        <a href="?page={{ articles.next_page_number }}">Вперед</a>
+    {% endif %}
+</div>
+</body>
+</html>

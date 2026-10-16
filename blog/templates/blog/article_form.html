@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ action }} статью</title></head>
+<body>
+<h2>{{ action }} статью</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+<br>
+<a href="{% url 'article_list' %}">Отмена</a>
+</body>
+</html>

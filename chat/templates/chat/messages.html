@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><title>Система сообщений</title></head>
+<body>
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <p><strong>Уведомление:</strong> {{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if edit_mode %}
+    <h2>Редактировать сообщение</h2>
+    <form method="POST" action="{% url 'edit_message' message.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить изменения</button>
+    </form>
+    <p><a href="{% url 'message_list' %}">Назад к списку</a></p>
+{% else %}
+    <h2>Фильтр сообщений</h2>
+    <form method="GET" action="">
+        <input type="date" name="date">
+        <button type="submit">Применить фильтр</button>
+    </form>
+
+    <h2>Список сообщений</h2>
+    <div>
+    {% for msg in messages_list %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <p>{{ msg.text }}</p>
+            <small>Дата: {{ msg.created_at }}</small>
+            <br><br>
+            <a href="{% url 'edit_message' msg.pk %}">Редактировать</a>
+            <form method="POST" action="{% url 'delete_message' msg.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Удалить</button>
+            </form>
+        </div>
+    {% empty %}
+        <p>Сообщений не найдено.</p>
+    {% endfor %}
+    </div>
+{% endif %}
+</body>
+</html>

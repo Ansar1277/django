@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Удаление</title></head>
+<body>
+<h2>Вы уверены, что хотите удалить "{{ article.title }}"?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Да, удалить</button>
+</form>
+<br>
+<a href="{% url 'article_detail' article.pk %}">Отмена</a>
+</body>
+</html>

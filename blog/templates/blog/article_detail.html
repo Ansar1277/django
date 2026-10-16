@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ article.title }}</title></head>
+<body>
+<h1>{{ article.title }}</h1>
+<p>Автор: {{ article.author.username }} | {{ article.created_at }}</p>
+
+{% if article.image %}
+    <img src="{{ article.image.url }}" style="max-width: 500px;"><br>
+{% endif %}
+
+<p>{{ article.text }}</p>
+
+<p>Теги:
+{% for tag in article.tags.all %}
+    <span>#{{ tag.name }} </span>
+{% endfor %}
+</p>
+
+<form action="{% url 'article_like' article.pk %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">❤️ Лайк ({{ article.likes.count }})</button>
+</form>
+
+{% if user == article.author %}
+    <p><a href="{% url 'article_update' article.pk %}">Редактировать</a> |
+    <a href="{% url 'article_delete' article.pk %}">Удалить</a></p>
+{% endif %}
+
+<hr>
+<h3>Комментарии:</h3>
+{% for comment in comments %}
+    <p><strong>{{ comment.author.username }}</strong> ({{ comment.created_at }}): {{ comment.text }}</p>
+{% empty %}
+    <p>Комментариев пока нет.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<form method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Отправить</button>
+</form>
+{% else %}
+    <p><a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий.</p>
+{% endif %}
+</body>
+</html>
